@@ -1,5 +1,6 @@
 package zeusro.freeOCR;
 
+import android.app.AlertDialog;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -18,6 +19,8 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+
+
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -26,6 +29,16 @@ public class MainActivity extends AppCompatActivity {
                         .setAction("Action", null).show();
             }
         });
+
+
+        if (getString(R.string.subscription_key).startsWith("Please")) {
+            new AlertDialog.Builder(this)
+                    .setTitle(getString(R.string.add_subscription_key_tip_title))
+                    .setMessage(getString(R.string.add_subscription_key_tip))
+                    .setCancelable(false)
+                    .show();
+        }
+
     }
 
     @Override
