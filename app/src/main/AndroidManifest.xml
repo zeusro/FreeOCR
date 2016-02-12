@@ -30,7 +30,7 @@
         <activity android:name=".RecognizeActivity" />
         <activity
             android:name=".SelectImageActivity"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait" />
     </application>
 
 </manifest>

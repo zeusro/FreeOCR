@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:fab="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -23,12 +24,49 @@
 
     <include layout="@layout/content_main" />
 
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/fab"
+
+    <com.getbase.floatingactionbutton.FloatingActionsMenu
+        android:id="@+id/right_labels"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
-        android:layout_margin="@dimen/fab_margin"
-        android:src="@android:drawable/ic_dialog_email" />
+        app:fab_icon="@mipmap/d_raymenu_normal"
+        fab:fab_addButtonColorNormal="@color/white"
+        fab:fab_addButtonColorPressed="@color/white_pressed"
+        fab:fab_addButtonPlusIconColor="@color/half_black"
+        fab:fab_addButtonSize="normal"
+        fab:fab_addButtonStrokeVisible="false"
+        fab:fab_labelStyle="@style/menu_labels_style"
+        fab:fab_labelsPosition="left">
+
+        <com.getbase.floatingactionbutton.FloatingActionButton
+            android:id="@+id/d_ray_menu_take_pic"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:maxHeight="86dp"
+            android:maxWidth="86dp"
+            android:minHeight="86dp"
+            android:minWidth="86dp"
+            app:fab_icon="@mipmap/d_ray_menu_take_pic"
+            app:fab_size="normal"
+            fab:fab_colorNormal="@color/white"
+            fab:fab_colorPressed="@color/white_pressed"
+            fab:fab_title="拍一张识别" />
+
+        <com.getbase.floatingactionbutton.FloatingActionButton
+            android:id="@+id/d_raymenu_add_pic"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:maxHeight="86dp"
+            android:maxWidth="86dp"
+            android:minHeight="86dp"
+            android:minWidth="86dp"
+            app:fab_icon="@mipmap/d_raymenu_add_pic"
+            fab:fab_colorNormal="@color/white"
+            fab:fab_colorPressed="@color/white_pressed"
+            fab:fab_size="normal"
+            fab:fab_title="从相册选取" />
+
+    </com.getbase.floatingactionbutton.FloatingActionsMenu>
 
 </android.support.design.widget.CoordinatorLayout>
