@@ -51,7 +51,8 @@
             app:fab_size="normal"
             fab:fab_colorNormal="@color/white"
             fab:fab_colorPressed="@color/white_pressed"
-            fab:fab_title="拍一张识别" />
+            fab:fab_title="拍一张识别"
+            android:onClick="takePic" />
 
         <com.getbase.floatingactionbutton.FloatingActionButton
             android:id="@+id/d_raymenu_add_pic"
@@ -65,7 +66,8 @@
             fab:fab_colorNormal="@color/white"
             fab:fab_colorPressed="@color/white_pressed"
             fab:fab_size="normal"
-            fab:fab_title="从相册选取" />
+            fab:fab_title="从相册选取"
+            android:onClick="addPicFromAlbum" />
 
     </com.getbase.floatingactionbutton.FloatingActionsMenu>
 
