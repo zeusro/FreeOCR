@@ -16,7 +16,6 @@ import android.widget.ImageView;
 
 import com.google.gson.Gson;
 import com.microsoft.projectoxford.vision.VisionServiceClient;
-import com.microsoft.projectoxford.vision.VisionServiceRestClient;
 import com.microsoft.projectoxford.vision.contract.LanguageCodes;
 import com.microsoft.projectoxford.vision.contract.Line;
 import com.microsoft.projectoxford.vision.contract.OCR;
@@ -31,6 +30,8 @@ import zeusro.freeOCR.helper.ImageHelper;
 
 
 public class RecognizeActivity extends ActionBarActivity {
+
+    static final int REQUEST_SELECT_IMAGE_IN_ALBUM = 1;
 
     // Flag to indicate which task is to be performed.
     private static final int REQUEST_SELECT_IMAGE = 0;
@@ -54,12 +55,27 @@ public class RecognizeActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_recognize);
 
-        if (client==null){
-            client = new VisionServiceRestClient(getString(R.string.subscription_key));
+        if (savedInstanceState.containsKey("Bitmap")) {
+            Bitmap bitmap = savedInstanceState.getParcelable("Bitmap");
+            if (bitmap != null) {
+                ImageView imageView = (ImageView) findViewById(R.id.selectedImage);
+                imageView.setImageBitmap(mBitmap);
+
+                // Add detection log.
+                Log.d("AnalyzeActivity", "Image: " + mImageUri + " resized to " + mBitmap.getWidth()
+                        + "x" + mBitmap.getHeight());
+
+                doRecognize();
+            }
         }
 
-        mButtonSelectImage = (Button)findViewById(R.id.buttonSelectImage);
-        mEditText = (EditText)findViewById(R.id.editTextResult);
+
+//        if (client == null) {
+//            client = new VisionServiceRestClient(getString(R.string.subscription_key));
+//        }
+
+        mButtonSelectImage = (Button) findViewById(R.id.buttonSelectImage);
+        mEditText = (EditText) findViewById(R.id.editTextResult);
     }
 
     @Override
@@ -99,7 +115,7 @@ public class RecognizeActivity extends ActionBarActivity {
         Log.d("AnalyzeActivity", "onActivityResult");
         switch (requestCode) {
             case REQUEST_SELECT_IMAGE:
-                if(resultCode == RESULT_OK) {
+                if (resultCode == RESULT_OK) {
                     // If image is selected successfully, set the image URI and bitmap.
                     mImageUri = data.getData();
 
@@ -130,8 +146,7 @@ public class RecognizeActivity extends ActionBarActivity {
 
         try {
             new doRequest().execute();
-        } catch (Exception e)
-        {
+        } catch (Exception e) {
             mEditText.setText("Error encountered. Exception is: " + e.toString());
         }
     }
