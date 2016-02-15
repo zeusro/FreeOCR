@@ -12,6 +12,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.microsoft.projectoxford.vision.VisionServiceClient;
@@ -77,8 +78,26 @@ public class RecognizeActivity extends AppCompatActivity {
                 doRecognize();
             }
         }
+//        setOnClickListener();
 //        mButtonSelectImage = (Button) findViewById(R.id.buttonSelectImage);
     }
+
+
+    protected void setOnClickListener() {
+        ImageView selectedImage = (ImageView) findViewById(R.id.selectedImage);
+        if (selectedImage != null) {
+            selectedImage.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Toast.makeText(RecognizeActivity.this, "shit", Toast.LENGTH_SHORT);
+
+                }
+
+            });
+        }
+
+    }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

@@ -19,7 +19,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="4dp"
-            android:text="Select an image to recognize text"/>
+            android:text="点击图片重新选图"/>
         <LinearLayout
             android:orientation="vertical"
             android:layout_width="fill_parent"
@@ -34,7 +34,8 @@
                 android:layout_toEndOf="@+id/image_control"
                 android:background="#E0E0E0"
                 android:accessibilityLiveRegion="none"
-                android:layout_gravity="center" />
+                android:layout_gravity="center"
+                android:clickable="true" />
 
         </LinearLayout>
 
