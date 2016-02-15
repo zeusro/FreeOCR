@@ -21,18 +21,18 @@
             android:layout_margin="4dp"
             android:text="Select an image to recognize text"/>
         <LinearLayout
-            android:orientation="horizontal"
+            android:orientation="vertical"
             android:layout_width="fill_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="200sp"
+            android:layout_gravity="center">
 
             <ImageView
                 android:id="@+id/selectedImage"
-                android:layout_width="200dp"
-                android:layout_height="200dp"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
                 android:layout_toRightOf="@+id/image_control"
                 android:layout_toEndOf="@+id/image_control"
                 android:background="#E0E0E0"
-                android:layout_margin="6dp"
                 android:accessibilityLiveRegion="none"
                 android:layout_gravity="center" />
 
@@ -41,17 +41,17 @@
         <LinearLayout
             android:orientation="horizontal"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="right"
-            android:layout_weight="1.03" >
+            android:layout_height="fill_parent"
+            >
 
             <EditText
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:inputType="textMultiLine"
-                android:ems="10"
                 android:id="@+id/editTextResult"
-                android:layout_weight="1" />
+                android:text="识别结果"
+                android:editable="false"
+                android:gravity="start" />
         </LinearLayout>
     </LinearLayout>
 </RelativeLayout>
