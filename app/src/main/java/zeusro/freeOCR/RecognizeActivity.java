@@ -5,17 +5,17 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 
 import com.google.gson.Gson;
 import com.microsoft.projectoxford.vision.VisionServiceClient;
+import com.microsoft.projectoxford.vision.VisionServiceRestClient;
 import com.microsoft.projectoxford.vision.contract.LanguageCodes;
 import com.microsoft.projectoxford.vision.contract.Line;
 import com.microsoft.projectoxford.vision.contract.OCR;
@@ -29,7 +29,7 @@ import java.io.IOException;
 import zeusro.freeOCR.helper.ImageHelper;
 
 
-public class RecognizeActivity extends ActionBarActivity {
+public class RecognizeActivity extends AppCompatActivity {
 
     static final int REQUEST_SELECT_IMAGE_IN_ALBUM = 1;
 
@@ -37,7 +37,7 @@ public class RecognizeActivity extends ActionBarActivity {
     private static final int REQUEST_SELECT_IMAGE = 0;
 
     // The button to select an image
-    private Button mButtonSelectImage;
+//    private Button mButtonSelectImage;
 
     // The URI of the image selected to detect.
     private Uri mImageUri;
@@ -50,32 +50,34 @@ public class RecognizeActivity extends ActionBarActivity {
 
     private VisionServiceClient client;
 
+
+    static final String bundlekey1 = "BitmapUrl";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_recognize);
 
-        if (savedInstanceState.containsKey("Bitmap")) {
-            Bitmap bitmap = savedInstanceState.getParcelable("Bitmap");
-            if (bitmap != null) {
+        if (client == null) {
+            client = new VisionServiceRestClient(getString(R.string.subscription_key));
+        }
+        mEditText = (EditText) findViewById(R.id.editTextResult);
+
+        Intent requestIntent = getIntent();
+        if (requestIntent != null) {
+            Log.d(this.getClass().getSimpleName(), requestIntent.getStringExtra(bundlekey1));
+            mImageUri = Uri.parse(requestIntent.getStringExtra(bundlekey1));
+            mBitmap = ImageHelper.loadSizeLimitedBitmapFromUri(mImageUri, getContentResolver());
+            Log.d(this.getClass().getSimpleName(), String.valueOf(mBitmap.getByteCount() / 1024 / 1024) + "Mb");
+            if (mBitmap != null) {
                 ImageView imageView = (ImageView) findViewById(R.id.selectedImage);
                 imageView.setImageBitmap(mBitmap);
-
                 // Add detection log.
-                Log.d("AnalyzeActivity", "Image: " + mImageUri + " resized to " + mBitmap.getWidth()
-                        + "x" + mBitmap.getHeight());
-
+                Log.d("AnalyzeActivity", "Image: " + mImageUri + " resized to " + mBitmap.getWidth() + "x" + mBitmap.getHeight());
                 doRecognize();
             }
         }
-
-
-//        if (client == null) {
-//            client = new VisionServiceRestClient(getString(R.string.subscription_key));
-//        }
-
-        mButtonSelectImage = (Button) findViewById(R.id.buttonSelectImage);
-        mEditText = (EditText) findViewById(R.id.editTextResult);
+//        mButtonSelectImage = (Button) findViewById(R.id.buttonSelectImage);
     }
 
     @Override
@@ -141,7 +143,7 @@ public class RecognizeActivity extends ActionBarActivity {
 
 
     public void doRecognize() {
-        mButtonSelectImage.setEnabled(false);
+//        mButtonSelectImage.setEnabled(false);
         mEditText.setText("Analyzing...");
 
         try {
@@ -211,7 +213,7 @@ public class RecognizeActivity extends ActionBarActivity {
 
                 mEditText.setText(result);
             }
-            mButtonSelectImage.setEnabled(true);
+//            mButtonSelectImage.setEnabled(true);
         }
     }
 }

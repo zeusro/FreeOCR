@@ -62,3 +62,5 @@ key management](<http://www.projectoxford.ai/doc/general/subscription-key-mgmt>)
 添加一个应用缩略图
 
 
+https://github.com/Microsoft/ProjectOxford-ClientSDK/tree/master/Vision/Android
+

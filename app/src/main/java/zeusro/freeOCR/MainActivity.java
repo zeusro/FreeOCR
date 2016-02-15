@@ -18,8 +18,6 @@ import android.widget.Toast;
 import java.io.File;
 import java.io.IOException;
 
-import zeusro.freeOCR.helper.ImageHelper;
-
 public class MainActivity extends AppCompatActivity {
     private static final int REQUEST_SELECT_IMAGE_IN_ALBUM = 1;
 
@@ -93,7 +91,7 @@ public class MainActivity extends AppCompatActivity {
 
     public void takePic(View v) {
         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        if(intent.resolveActivity(getPackageManager()) != null) {
+        if (intent.resolveActivity(getPackageManager()) != null) {
             // Save the photo taken to a temporary file.
             File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
             try {
@@ -102,7 +100,7 @@ public class MainActivity extends AppCompatActivity {
                 intent.putExtra(MediaStore.EXTRA_OUTPUT, mUriPhotoTaken);
                 startActivityForResult(intent, REQUEST_TAKE_PHOTO);
             } catch (IOException e) {
-                Log.e("REQUEST_SELECT_IMAGE",e.getMessage());
+                Log.e("REQUEST_SELECT_IMAGE", e.getMessage());
             }
         }
 
@@ -125,23 +123,14 @@ public class MainActivity extends AppCompatActivity {
         switch (requestCode) {
             case REQUEST_SELECT_IMAGE_IN_ALBUM:
                 if (resultCode == RESULT_OK) {
-                    // If image is selected successfully, set the image URI and bitmap.
-                    mImageUri = data.getData();
-                    mBitmap = ImageHelper.loadSizeLimitedBitmapFromUri(mImageUri, getContentResolver());
-                    if (mBitmap != null) {
-
-                        Intent resultIntent = new Intent();
-                        Bundle bundle = new Bundle();
-                        bundle.putParcelable("Bitmap", mBitmap);
-                        resultIntent.putExtras(bundle);
-                        resultIntent.setClass(this, RecognizeActivity.class);
-                        startActivity(resultIntent, bundle);
-//                        setResult(RecognizeActivity.REQUEST_SELECT_IMAGE_IN_ALBUM, resultIntent);
-                    }
+                    Intent resultIntent = new Intent(this, RecognizeActivity.class);
+                    Bundle bundle = new Bundle();
+                    bundle.putString(RecognizeActivity.bundlekey1, String.valueOf(data.getData()));
+                    resultIntent.putExtras(bundle);
+                    startActivity(resultIntent);
                 }
                 break;
             case REQUEST_TAKE_PHOTO:
-
                 if (resultCode == RESULT_OK) {
                     Uri imageUri;
                     if (data == null || data.getData() == null) {
