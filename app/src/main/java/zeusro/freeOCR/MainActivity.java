@@ -56,7 +56,6 @@ public class MainActivity extends AppCompatActivity {
 //            }
 //        });
 
-
         if (getString(R.string.subscription_key).startsWith("Please")) {
             new AlertDialog.Builder(this)
                     .setTitle(getString(R.string.add_subscription_key_tip_title))
