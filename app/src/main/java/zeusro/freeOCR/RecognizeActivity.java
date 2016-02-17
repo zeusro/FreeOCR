@@ -1,5 +1,6 @@
 package zeusro.freeOCR;
 
+import android.content.ClipData;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
@@ -10,8 +11,8 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
@@ -47,26 +48,31 @@ public class RecognizeActivity extends AppCompatActivity {
     private Bitmap mBitmap;
 
     // The edit to show status and result.
-    private EditText mEditText;
+    private TextView mEditText;
 
     private VisionServiceClient client;
 
+    private ImageView selectedImage;
 
     static final String bundlekey1 = "BitmapUrl";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_recognize);
 
         if (client == null) {
             client = new VisionServiceRestClient(getString(R.string.subscription_key));
         }
-        mEditText = (EditText) findViewById(R.id.editTextResult);
+//        mEditText = (EditText) findViewById(R.id.editTextResult);
+        mEditText = (TextView) findViewById(R.id.editTextResult);
+        selectedImage = (ImageView) findViewById(R.id.selectedImage);
 
         Intent requestIntent = getIntent();
-        if (requestIntent != null) {
-            Log.d(this.getClass().getSimpleName(), requestIntent.getStringExtra(bundlekey1));
+        if (requestIntent != null && requestIntent.getStringExtra(bundlekey1) != null) {
+            Log.d(this.getClass().getSimpleName(), String.valueOf(requestIntent.getStringExtra(bundlekey1)));
             mImageUri = Uri.parse(requestIntent.getStringExtra(bundlekey1));
             mBitmap = ImageHelper.loadSizeLimitedBitmapFromUri(mImageUri, getContentResolver());
             Log.d(this.getClass().getSimpleName(), String.valueOf(mBitmap.getByteCount() / 1024 / 1024) + "Mb");
@@ -77,24 +83,69 @@ public class RecognizeActivity extends AppCompatActivity {
                 Log.d("AnalyzeActivity", "Image: " + mImageUri + " resized to " + mBitmap.getWidth() + "x" + mBitmap.getHeight());
                 doRecognize();
             }
+        } else {
+            Toast.makeText(RecognizeActivity.this, "宝宝有事了", Toast.LENGTH_SHORT).show();
         }
-//        setOnClickListener();
+        setOnClickListener();
 //        mButtonSelectImage = (Button) findViewById(R.id.buttonSelectImage);
     }
 
 
     protected void setOnClickListener() {
-        ImageView selectedImage = (ImageView) findViewById(R.id.selectedImage);
         if (selectedImage != null) {
-            selectedImage.setOnClickListener(new View.OnClickListener() {
+            selectedImage.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
-                public void onClick(View v) {
-                    Toast.makeText(RecognizeActivity.this, "shit", Toast.LENGTH_SHORT);
-
+                public boolean onLongClick(View v) {
+                    Toast.makeText(RecognizeActivity.this, "shit2", Toast.LENGTH_SHORT).show();
+                    return true;
                 }
 
             });
+
+            //全屏预览
+            selectedImage.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Toast.makeText(RecognizeActivity.this, "shit", Toast.LENGTH_SHORT).show();
+                    if (mImageUri != null) {
+
+                        Intent loadImageIntent = new Intent(RecognizeActivity.this, ImageLoaderActivity.class);
+                        Bundle bundle = new Bundle();
+                        bundle.putString(ImageLoaderActivity.bundleKey_ImageUrl, String.valueOf(mImageUri.toString()));
+                        loadImageIntent.putExtras(bundle);
+                        startActivity(loadImageIntent);
+
+//                        LayoutInflater inflater = LayoutInflater.from(RecognizeActivity.this);
+//                        View view = (LinearLayout) inflater.inflate(R.layout.imageloader, null);
+//                        SimpleDraweeView draweeView = (SimpleDraweeView) view.findViewById(R.id.my_image_view);
+//                        draweeView.setImageURI(mImageUri);
+//                        RecognizeActivity.this.addContentView(view, null);
+//                        RecognizeActivity.this.setContentView(v);
+                    }
+
+                }
+            });
         }
+
+        mEditText.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String text = String.valueOf(mEditText.getText());
+                android.content.ClipboardManager myClipboard = (android.content.ClipboardManager) getSystemService(CLIPBOARD_SERVICE);
+                ClipData myClip = ClipData.newPlainText("text", text);
+                myClipboard.setPrimaryClip(myClip);
+                Toast.makeText(RecognizeActivity.this, "已复制到剪贴板", Toast.LENGTH_SHORT).show();
+
+            }
+        });
+
+        mEditText.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                Toast.makeText(RecognizeActivity.this, "caonima", Toast.LENGTH_SHORT).show();
+                return true;
+            }
+        });
 
     }
 
@@ -139,7 +190,6 @@ public class RecognizeActivity extends AppCompatActivity {
                 if (resultCode == RESULT_OK) {
                     // If image is selected successfully, set the image URI and bitmap.
                     mImageUri = data.getData();
-
                     mBitmap = ImageHelper.loadSizeLimitedBitmapFromUri(
                             mImageUri, getContentResolver());
                     if (mBitmap != null) {
@@ -163,7 +213,7 @@ public class RecognizeActivity extends AppCompatActivity {
 
     public void doRecognize() {
 //        mButtonSelectImage.setEnabled(false);
-        mEditText.setText("Analyzing...");
+        mEditText.setText("分析中,请不要断网...");
 
         try {
             new doRequest().execute();
@@ -187,6 +237,14 @@ public class RecognizeActivity extends AppCompatActivity {
         Log.d("result", result);
 
         return result;
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        // TODO: 2016/2/17 保存数据
+
+
     }
 
     private class doRequest extends AsyncTask<String, String, String> {
